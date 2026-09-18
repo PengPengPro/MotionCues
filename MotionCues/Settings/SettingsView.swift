@@ -35,6 +35,14 @@ private struct AppearanceSettings: View {
         let lang = settings.language
         Form {
             Section {
+                Picker(L10n.t(.language, lang), selection: $settings.language) {
+                    ForEach(AppLanguage.allCases) { option in
+                        Text(option.menuTitle).tag(option)
+                    }
+                }
+            }
+
+            Section {
                 slider(L10n.t(.dotSize, lang), value: $settings.dotDiameter, range: 3...22, unit: "pt")
                 slider(L10n.t(.opacity, lang), value: $settings.opacity, range: 0.05...1.0, unit: "")
                 slider(L10n.t(.howFarInFromEdge, lang), value: $settings.peripherySize,

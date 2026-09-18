@@ -39,6 +39,12 @@ struct MenuBarView: View {
             Text(L10n.t(.simulator, lang)).tag(MotionSourceKind.simulator)
         }
 
+        Picker(L10n.t(.language, lang), selection: $settings.language) {
+            ForEach(AppLanguage.allCases) { option in
+                Text(option.menuTitle).tag(option)
+            }
+        }
+
         Divider()
 
         Button(L10n.t(.welcomeAndSetup, lang)) {
