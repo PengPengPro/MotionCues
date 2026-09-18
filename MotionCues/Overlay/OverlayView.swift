@@ -84,7 +84,15 @@ final class OverlayView: NSView {
     private func reconfigure() {
         guard bounds.width > 1, bounds.height > 1 else { return }
         let scale = window?.backingScaleFactor ?? 2
-        let isDark = effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+        let systemDark = effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+        // Contrast mode respects the Contrast picker; solid/random ignore it for fill
+        // but still need a dark/light flag for any future contrast-dependent work.
+        let isDark: Bool
+        switch settings.appearance {
+        case .automatic: isDark = systemDark
+        case .light: isDark = false   // "Dark dots" → treat as light background
+        case .dark: isDark = true     // "Light dots" → treat as dark background
+        }
         layer?.contentsScale = scale
         layer?.frame = bounds
         renderer?.configure(settings: settings, size: bounds.size, scale: scale, isDark: isDark)

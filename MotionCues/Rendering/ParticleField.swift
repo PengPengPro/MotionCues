@@ -56,6 +56,8 @@ struct Particle {
     var radius: Double
     /// 0…1, before the global opacity setting is applied.
     var alpha: Double
+    /// Stable lattice identity for random colouring (ix/iy/iz mixed).
+    var colorSeed: UInt32 = 0
 }
 
 /// Wrapping 3-D grid of particles, in *screen-ish* units: x and y are points,
@@ -252,7 +254,8 @@ struct ParticleField {
                     body(Particle(position: CGPoint(x: px, y: py),
                                   previous: CGPoint(x: prevX, y: prevY),
                                   radius: baseRadius * scale * (0.55 + 0.45 * intensity),
-                                  alpha: alpha))
+                                  alpha: alpha,
+                                  colorSeed: Self.mixSeed(ix: ix, iy: iy, iz: iz)))
                 }
             }
         }
@@ -284,5 +287,12 @@ struct ParticleField {
         guard b > a else { return x >= b ? 1 : 0 }
         let t = max(0, min(1, (x - a) / (b - a)))
         return t * t * (3 - 2 * t)
+    }
+
+    static func mixSeed(ix: Int, iy: Int, iz: Int) -> UInt32 {
+        var h = UInt32(bitPattern: Int32(truncatingIfNeeded: ix))
+        h = h &* 0x9E3779B1 &+ UInt32(bitPattern: Int32(truncatingIfNeeded: iy))
+        h = h &* 0x85EBCA77 &+ UInt32(bitPattern: Int32(truncatingIfNeeded: iz))
+        return h
     }
 }

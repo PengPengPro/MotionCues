@@ -161,7 +161,15 @@ final class MetalDotRenderer: DotRendering {
         // answer (it is what a text shadow or a map label outline does): the
         // halo is invisible against a background of its own colour and gives
         // the dot a hard edge against the opposite one.
-        let darkFirst = !isDark
+        let darkDots: Bool
+        switch settings.colorMode {
+        case .contrast:
+            // darkDots true → black on light backgrounds.
+            darkDots = !isDark
+        case .solid, .random:
+            darkDots = !isDark // unused by CueColoring for these modes
+        }
+
         field.forEachParticle(viewport: viewport, settings: settings) { p in
             guard instances.count + 2 <= Self.maxInstances else { return }
             let r = Float(p.radius)
@@ -170,21 +178,17 @@ final class MetalDotRenderer: DotRendering {
             let head = SIMD2<Float>(Float(p.position.x), Float(p.position.y))
             let tail = SIMD2<Float>(Float(p.previous.x), Float(p.previous.y))
 
-            let strong: SIMD4<Float> = darkFirst
-                ? SIMD4<Float>(0, 0, 0, 1)
-                : SIMD4<Float>(1, 1, 1, 1)
-            // Weaker than the dot: the halo exists to give an edge, and at full
-            // strength it darkens whatever is behind the whole field.
-            let counter: SIMD4<Float> = darkFirst
-                ? SIMD4<Float>(1, 1, 1, 0.5)
-                : SIMD4<Float>(0, 0, 0, 0.5)
+            let pair = CueColoring.pair(mode: settings.colorMode,
+                                        darkDots: darkDots,
+                                        solid: settings.solidColor,
+                                        seed: p.colorSeed)
 
             instances.append(InstanceData(head: head, tail: tail,
                                           radius: r + max(1.4, r * 0.55),
-                                          alpha: Float(p.alpha), colour: counter))
+                                          alpha: Float(p.alpha), colour: pair.halo))
             instances.append(InstanceData(head: head, tail: tail,
                                           radius: r, alpha: Float(p.alpha),
-                                          colour: strong))
+                                          colour: pair.strong))
         }
     }
 

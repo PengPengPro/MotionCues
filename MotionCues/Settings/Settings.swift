@@ -23,6 +23,10 @@ final class AppSettings: ObservableObject {
     @Published var smoothing: Double { didSet { defaults.set(smoothing, forKey: K.smoothing) } }
     @Published var sensitivity: Double { didSet { defaults.set(sensitivity, forKey: K.sensitivity) } }
     @Published var appearance: CueAppearance { didSet { defaults.set(appearance.rawValue, forKey: K.appearance) } }
+    @Published var colorMode: CueColorMode { didSet { defaults.set(colorMode.rawValue, forKey: K.colorMode) } }
+    @Published var solidRed: Double { didSet { defaults.set(solidRed, forKey: K.solidRed) } }
+    @Published var solidGreen: Double { didSet { defaults.set(solidGreen, forKey: K.solidGreen) } }
+    @Published var solidBlue: Double { didSet { defaults.set(solidBlue, forKey: K.solidBlue) } }
     @Published var verticalCues: Bool { didSet { defaults.set(verticalCues, forKey: K.verticalCues) } }
     @Published var sourceKind: MotionSourceKind { didSet { defaults.set(sourceKind.rawValue, forKey: K.sourceKind) } }
     @Published var startOnLaunch: Bool { didSet { defaults.set(startOnLaunch, forKey: K.startOnLaunch) } }
@@ -56,6 +60,10 @@ final class AppSettings: ObservableObject {
             K.smoothing: 0.5,
             K.sensitivity: 0.5,
             K.appearance: CueAppearance.automatic.rawValue,
+            K.colorMode: CueColorMode.contrast.rawValue,
+            K.solidRed: CueSolidRGB.default.red,
+            K.solidGreen: CueSolidRGB.default.green,
+            K.solidBlue: CueSolidRGB.default.blue,
             K.verticalCues: true,
             K.sourceKind: MotionSourceKind.automatic.rawValue,
             K.startOnLaunch: false,
@@ -74,6 +82,10 @@ final class AppSettings: ObservableObject {
         smoothing = defaults.double(forKey: K.smoothing)
         sensitivity = defaults.double(forKey: K.sensitivity)
         appearance = CueAppearance(rawValue: defaults.string(forKey: K.appearance) ?? "") ?? .automatic
+        colorMode = CueColorMode(rawValue: defaults.string(forKey: K.colorMode) ?? "") ?? .contrast
+        solidRed = defaults.object(forKey: K.solidRed) as? Double ?? CueSolidRGB.default.red
+        solidGreen = defaults.object(forKey: K.solidGreen) as? Double ?? CueSolidRGB.default.green
+        solidBlue = defaults.object(forKey: K.solidBlue) as? Double ?? CueSolidRGB.default.blue
         verticalCues = defaults.bool(forKey: K.verticalCues)
         sourceKind = MotionSourceKind(rawValue: defaults.string(forKey: K.sourceKind) ?? "") ?? .automatic
         startOnLaunch = defaults.bool(forKey: K.startOnLaunch)
@@ -109,6 +121,8 @@ final class AppSettings: ObservableObject {
         RenderSettings(dotDiameter: dotDiameter,
                        opacity: opacity,
                        appearance: appearance,
+                       colorMode: colorMode,
+                       solidColor: CueSolidRGB(red: solidRed, green: solidGreen, blue: solidBlue),
                        verticalCues: verticalCues,
                        idleFadeEnabled: idleFade,
                        flowGain: intensity.flowGain,
@@ -124,6 +138,10 @@ final class AppSettings: ObservableObject {
         responsiveness = 0.5
         peripherySize = 240
         appearance = .automatic
+        colorMode = .contrast
+        solidRed = CueSolidRGB.default.red
+        solidGreen = CueSolidRGB.default.green
+        solidBlue = CueSolidRGB.default.blue
         verticalCues = true
         idleFade = true
     }
@@ -135,6 +153,10 @@ final class AppSettings: ObservableObject {
         static let smoothing = "smoothing"
         static let sensitivity = "sensitivity"
         static let appearance = "appearance"
+        static let colorMode = "colorMode"
+        static let solidRed = "solidRed"
+        static let solidGreen = "solidGreen"
+        static let solidBlue = "solidBlue"
         static let verticalCues = "verticalCues"
         static let sourceKind = "sourceKind"
         static let startOnLaunch = "startOnLaunch"

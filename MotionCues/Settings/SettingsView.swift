@@ -3,6 +3,7 @@
 //
 
 import SwiftUI
+import AppKit
 import CoreMotion
 
 struct SettingsView: View {
@@ -53,17 +54,29 @@ private struct AppearanceSettings: View {
             }
 
             Section {
-                Picker(L10n.t(.contrast, lang), selection: $settings.appearance) {
-                    ForEach(CueAppearance.allCases) {
+                Picker(L10n.t(.colorMode, lang), selection: $settings.colorMode) {
+                    ForEach(CueColorMode.allCases) {
                         Text($0.localizedName(lang)).tag($0)
                     }
+                }
+                if settings.colorMode == .contrast {
+                    Picker(L10n.t(.contrast, lang), selection: $settings.appearance) {
+                        ForEach(CueAppearance.allCases) {
+                            Text($0.localizedName(lang)).tag($0)
+                        }
+                    }
+                }
+                if settings.colorMode == .solid {
+                    ColorPicker(L10n.t(.solidColor, lang),
+                                selection: solidColorBinding,
+                                supportsOpacity: false)
                 }
                 Toggle(L10n.t(.includeVerticalCues, lang), isOn: $settings.verticalCues)
                 Toggle(L10n.t(.fadeDotsWhenStill, lang), isOn: $settings.idleFade)
                 Toggle(L10n.t(.hideFromScreenCapture, lang),
                        isOn: $settings.hideFromScreenCapture)
             } footer: {
-                Text(L10n.t(.contrastFooter, lang))
+                Text(colorFooter(lang))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -73,6 +86,28 @@ private struct AppearanceSettings: View {
             }
         }
         .formStyle(.grouped)
+    }
+
+    private var solidColorBinding: Binding<Color> {
+        Binding(
+            get: {
+                Color(red: settings.solidRed, green: settings.solidGreen, blue: settings.solidBlue)
+            },
+            set: { newValue in
+                let resolved = NSColor(newValue).usingColorSpace(.deviceRGB) ?? NSColor(newValue)
+                settings.solidRed = Double(resolved.redComponent)
+                settings.solidGreen = Double(resolved.greenComponent)
+                settings.solidBlue = Double(resolved.blueComponent)
+            }
+        )
+    }
+
+    private func colorFooter(_ lang: AppLanguage) -> String {
+        switch settings.colorMode {
+        case .contrast: L10n.t(.contrastFooter, lang)
+        case .solid: L10n.t(.solidColorFooter, lang)
+        case .random: L10n.t(.randomColorFooter, lang)
+        }
     }
 
     private func slider(_ title: String, value: Binding<Double>,

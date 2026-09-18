@@ -32,6 +32,8 @@ public enum L10n {
         case tabAppearance, tabMotion, tabCalibration, tabSensors
         case dotSize, opacity, howFarInFromEdge
         case peripheryFooter
+        case colorMode, colorModeContrast, colorModeSolid, colorModeRandom
+        case solidColor, solidColorFooter, randomColorFooter
         case contrast
         case followSystem, darkDotsForLight, lightDotsForDark
         case includeVerticalCues, fadeDotsWhenStill, hideFromScreenCapture
@@ -207,6 +209,28 @@ public enum L10n {
             .english: "The cue lives in your peripheral vision. The middle of the screen is left clear, because that is where you are reading.",
             .chineseSimplified: "提示点出现在余光区域。屏幕中央留空，那是你阅读的位置。"
         ],
+        .colorMode: [.english: "Dot colour", .chineseSimplified: "圆点颜色"],
+        .colorModeContrast: [
+            .english: "Auto contrast (black / white)",
+            .chineseSimplified: "自动对比（黑 / 白）"
+        ],
+        .colorModeSolid: [
+            .english: "Single colour",
+            .chineseSimplified: "单色"
+        ],
+        .colorModeRandom: [
+            .english: "Random colours",
+            .chineseSimplified: "随机多色"
+        ],
+        .solidColor: [.english: "Colour", .chineseSimplified: "颜色"],
+        .solidColorFooter: [
+            .english: "Every particle uses this colour. A light or dark rim is still drawn so the dots stay readable on either background.",
+            .chineseSimplified: "所有粒子使用这一颜色。仍会画浅或深的描边，以便在浅色或深色背景上都看得清。"
+        ],
+        .randomColorFooter: [
+            .english: "Each particle keeps a fixed random hue. A light or dark rim keeps them readable on either background.",
+            .chineseSimplified: "每个粒子固定一种随机色相。浅或深的描边保证在浅色或深色背景上都看得清。"
+        ],
         .contrast: [.english: "Contrast", .chineseSimplified: "对比"],
         .followSystem: [.english: "Follow system", .chineseSimplified: "跟随系统"],
         .darkDotsForLight: [
@@ -230,8 +254,8 @@ public enum L10n {
             .chineseSimplified: "截屏与屏幕共享时隐藏叠加层"
         ],
         .contrastFooter: [
-            .english: "The overlay cannot read what is behind it without Screen Recording permission. Rather than guess, every particle is drawn twice — once light, once dark, slightly offset — so whichever one contrasts with your content is the one you see.",
-            .chineseSimplified: "没有屏幕录制权限时，叠加层无法读取背后内容。因此每个粒子会画两次——一次浅、一次深，并略微错开——哪一个与内容对比更强，你就会看见哪一个。"
+            .english: "Without Screen Recording permission the overlay cannot read what is behind it. Each particle is drawn twice — a light or dark rim under a black or white core — so whichever contrasts with your content is the one you see.",
+            .chineseSimplified: "没有屏幕录制权限时，叠加层无法读取背后内容。每个粒子画两次——黑或白的核心加上浅或深的描边——哪一个与内容对比更强，你就会看见哪一个。"
         ],
         .resetToDefaults: [
             .english: "Reset to defaults",
